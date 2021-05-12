@@ -1,0 +1,1 @@
+call sp_writeVille(:ville,:codePostal)//Raw, GET
