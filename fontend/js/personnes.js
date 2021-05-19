@@ -2,7 +2,7 @@
 
 document.addEventListener("DOMContentLoaded", voirPersonnes);
 
-let reponse;
+let reponseP;
 function voirPersonnes()
 {
 
@@ -12,43 +12,44 @@ function voirPersonnes()
     xhr.send();
     function affiche() {
 
-        reponse = JSON.parse(this.responseText);
-        let elHtml = "<tr>";
-
-        for(let i of reponse)
+        reponseP = JSON.parse(this.responseText);
+        let elHtml = "";
+        let elForm = "";
+        for(let i of reponseP)
         {
-
+                elHtml += "<tr>";
                 elHtml += "<th>" + i.idPersonne + "</th>";
+                elForm += "<option value=\"" + i.idPersonne  + "\">" + i.nomPersonne + " " + i.prenomPersonne + "</option>";
                 elHtml += "<th>" + i.prenomPersonne + "</th>";
                 elHtml += "<th>" + i.nomPersonne + "</th>";
-                //elHtml += "<th>" + i.naissanceDate + "</th>";
-
+                elHtml += "<th>" + i.naissanceDate + "</th>";
+                elHtml += "</tr>";
         }
-		elHtml += "</tr>";
-        document.getElementById("listeVilles").innerHTML = elHtml; // affiche les autres acteurs
+        document.getElementById("personneTestCovid").innerHTML = elForm;
+        document.getElementById("tbodyPersonnes").innerHTML = elHtml; // affiche les autres acteurs
     }
 }
-function ajouterVille(formulaire)
+function ajouterPersonne(formulaire)
 {
     let xhr = new XMLHttpRequest();
-    //console.log(formulaire.ville.value);
-    let ville = formulaire.ville.value;
+    console.log(formulaire.naissance.value);
+    //let ville = formulaire.ville.value;
     //console.log(formulaire.codePostal.value);
-    let codePostal = formulaire.codePostal.value;
-    xhr.onload = testVille();
-    xhr.open('GET', 'writeVille?ville=' + ville + "&codePostal=" + codePostal, true); // donnée par le serveur sql
+    //let codePostal = formulaire.codePostal.value;
+    xhr.open('GET', 'writePersonne?nom=' + formulaire.nom.value + "&prenom=" + formulaire.prenom.value + "&naissance=" + formulaire.naissance.value + "&sexe=" + formulaire.sexe.value, true); // donnée par le serveur sql
+    xhr.onload = voirPersonnes();
     xhr.send();
 
-    function testVille()//test si ville déjà rentrer
-    {
-        for (let i of reponse)
-        {
-            if (ville == i.nomVille)
-            {
-                return 1;//ville déjà entrée
-            }
-        }
-    }
-	//voirVilles();
+	return false;
+
+}
+function ajouterTestCovid(formulaire)
+{
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', 'writeTest?personne=' + formulaire.personneTestCovid.value + "&resultat=" + formulaire.resultatTestCovid.value + "&effect=" + formulaire.dateTestCovid.value + "&expiration=" + formulaire.dateExpirationTestCovid.value, true); // donnée par le serveur sql
+    xhr.onload = voirPersonnes();
+    xhr.send();
+
+    return false;
 
 }
